@@ -1,0 +1,99 @@
+import {useState} from 'react'
+let App=()=>{
+  let [data,setData]=useState({uid: '', title: '', desc: '', dedline: ''})
+  let [todo,setTodo]=useState([])
+  let [ind,setInd]=useState()
+  let [f,setFlag]=useState(true)
+  let [comp,setComp]=useState([])
+  let fun=(e)=>{
+    setData({...data,[e.target.name]:e.target.value})
+    console.log(data)
+
+  }
+  let add=()=>
+  {
+setTodo([...todo,data])
+setData({uid: '', title: '', desc: '', dedline: ''})
+  }
+  let del=(index)=>{
+    todo.splice(index,1)
+    setTodo([...todo])
+  }
+  let comdel=(index)=>{
+    comp.splice(index,1)
+    setComp([...comp])
+  }
+
+  let edit=(index)=>{
+    setData(todo[index])
+    setInd(index)
+    setFlag(false)
+  }
+  let upd=()=>{
+    todo[ind]=data
+    setTodo([...todo])
+    setFlag(true)
+    setData({uid: '', title: '', desc: '', dedline: ''})
+ 
+  }
+  let com=(index)=>{
+    setComp([...comp,todo[index]])
+    del(index)
+
+  }
+
+  return(
+    <div>
+      <input type="text" name="uid" value={data.uid} onChange={fun}/>
+      <input type="text" name="title" value={data.title} onChange={fun}/>
+      <input type="text" name="desc" value={data.desc} onChange={fun}/>
+      <input type="date" name="dedline" value={data.dedline} onChange={fun}/>
+    {f&&<button onClick={add}>Add</button>}
+    {!f&&<button onClick={upd}>Update</button>}
+
+    <div>
+      <table border={1}>
+      <tr><th>UID</th><th>Title</th><th>description</th><th>deadline</th></tr>
+        {
+          todo.map((item,index)=>{
+            return(
+              <tr>
+                <td>{item.uid}</td>
+                <td>{item.title}</td>
+                <td>{item.desc}</td>
+                <td>{item.dedline}</td>
+                <td><button onClick={()=>edit(index)}>edit</button></td>
+                <td><button onClick={()=>del(index)}>delete</button></td>
+                <td><button onClick={()=>com(index)}>completed</button></td>
+              </tr>
+            )
+
+          })
+        }
+      </table>
+    </div>
+    <div>
+<h1>Completed tasks:</h1>
+    <table border={1}>
+    <tr><th>UID</th><th>Title</th><th>description</th><th>deadline</th></tr>
+        {
+          comp.map((item,index)=>{
+            return(
+              <tr>
+                <td>{item.uid}</td>
+                <td>{item.title}</td>
+                <td>{item.desc}</td>
+                <td>{item.dedline}</td>
+                <td><button onClick={()=>comdel(index)}>delete</button></td>
+                </tr>
+            )
+
+          })
+        }
+      </table>
+    </div>
+    </div>
+  )
+
+}
+export default App
